@@ -2,22 +2,20 @@ movies = []
 START = "\nEnter 'a' to add a movie, 'l' to see your movies, 'f' to find a movie by title, or 'q' to quit: "
 
 
-def add_film():
+def add_movie():
     title = input("Enter title of the film: ")
-    year = input("Enter year of the film: ")
     director = input("Enter director of the film: ")
+    year = input("Enter year of the film: ")
     genre = input("Enter genre of the film: ")
-    rating = input("Enter your rating of the film: ")
     movies.append({
         'title': title,
         'year': year,
         'director': director,
-        'genre': genre,
-        'rating': rating
+        'genre': genre
     })
 
 
-def list_available_films():
+def list_movies():
     quantity = len(movies)
     titles = [movie['title'] for movie in movies]
     titles = ', '.join(titles)
@@ -28,29 +26,36 @@ def list_available_films():
         print('There are no movies in you collection.')
 
 
-def find_specific_title(title):
+def print_movie_info(movie):
+    print('Here is information about requested title')
+    print(f'Title: {movie["title"]},')
+    print(f'Director: {movie["director"]},')
+    print(f'Year: {movie["year"]},')
+    print(f'Genre: {movie["genre"]}.')
+
+
+def find_title():
+    search_title = input('Enter title you are looking for: ')
     for movie in movies:
-        if movie['title'] == title:
-            return f'''Here is information about requested title:
-                    Title: {movie['title']},
-                    Director: {movie['director']},
-                    Year: {movie['year']},
-                    Genre: {movie['genre']},
-                    Rating: {movie['rating']}.'''
+        if movie['title'] == search_title:
+            print_movie_info(movie)
         else:
-            return 'Requested title was not found in the collection.'
+            print('Requested title was not found in the collection.')
 
 
-def main_process():
+user_selection = {
+    'a': add_movie,
+    'l': list_movies,
+    'f': find_title
+}
+
+
+def menu():
     selection = input(START).lower()
     while selection != 'q':
-        if selection == 'a':
-            add_film()
-        elif selection == 'l':
-            list_available_films()
-        elif selection == 'f':
-            title = input('Enter title of the movie: ')
-            print(find_specific_title(title))
+        if selection in user_selection:
+            selected_action = user_selection[selection]
+            selected_action()
         else:
             print("Unknown command. Please choose within available options: 'a', 'f', 'l' or 'q' to close the app.")
         selection = input(START)
@@ -58,4 +63,4 @@ def main_process():
 
 
 if __name__ == '__main__':
-    main_process()
+    menu()
